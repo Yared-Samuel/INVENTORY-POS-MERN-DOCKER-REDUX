@@ -1,0 +1,103 @@
+.containers{
+    margin: 0.2rem;
+    padding: 0;
+    display: flex;
+    justify-content: space-around;
+    /* column-gap: 1; */
+    min-height: 80vh;
+    /* background-color: white; */
+    border-radius: 1rem;
+ 
+    
+}
+
+.boxs{
+    width: 55%;
+    height: 120px;
+    margin: 2rem;
+    padding: 0;
+    display: inline-block;
+}
+.top-title{
+    margin: 0;
+    padding: 0;
+    display: flex;
+    justify-content: space-between;
+    padding-left: 2rem;
+    padding-right: 2rem;
+    
+}
+
+.search{
+    margin: 0;
+    padding: 0;
+    width: 20%;
+}
+h4{
+    padding: 0;
+    margin: 0;
+    color: #47A992,
+    
+
+}
+p{
+    color: teal;
+    font-weight: bolder;
+
+}
+
+/* Upper button style */
+
+.report-btn{
+    font-size: 2vmin;
+    font-weight: bold;
+    padding: .5em 1em;
+    background: #fff;
+    color: #4A5568;
+    border: 0px solid #A0AEC0;
+    margin: .1em;
+    transition: background .2s ease, color .2s ease, box-shadow .2s ease, transform .2s ease;
+    box-shadow: 0 0 0 #BEE3F8;
+    transform: translateY(0);
+  }
+  .report-btn-active {
+    /* font-size: 2vmin; */
+    font-size: 1.5rem;
+    font-weight: bolder;
+    padding: .5em 1em;
+    background: #47A992;
+    color: #fff;
+    border: 0px solid #A0AEC0;
+    margin: .1em;
+    transition: background .2s ease, color .2s ease, box-shadow .2s ease, transform .2s ease;
+    box-shadow: 0 0 0.8em 0 rgba(213, 63, 140, .8);
+    transform: translateY(0);
+  }
+  .report-btn:first-of-type{
+    border-radius: .5em 0 0 .5em;
+  }
+  .report-btn:last-of-type{
+    border-radius: 0 .5em .5em 0;
+  }
+  .report-btn i{
+    color: #A0AEC0;
+    margin-right: .3em;
+    transition: all .2s ease-out;
+  }
+  .multi-button:hover button{
+    color: #A0AEC0;
+  }
+  
+  .multi-button:hover button:hover{
+    background: #D53F8C;
+    color: #fff;
+    box-shadow: 0 0 0.8em 0 rgba(213, 63, 140, .8);
+    transform: translateY(-.2em);
+  }
+  .multi-button:hover button i{
+    color: #CBD5E0;
+  }
+  .multi-button:hover button:hover i{
+    color: #FED7E2;
+    transform: rotate(-10deg);
+  }

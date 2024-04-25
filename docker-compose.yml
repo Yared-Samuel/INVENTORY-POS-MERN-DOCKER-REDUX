@@ -1,0 +1,32 @@
+version: "3.8"
+services:
+
+  mongodb:
+    image: mongo:latest
+    container_name: mongodb
+    ports:
+      - "27017:27017"
+    restart: always
+
+  api:
+    build: ./backend
+    container_name: backend
+    ports: 
+      - "5000:5000"
+    volumes:
+      - ./backend:/backend
+      - /backend/node_modules
+    environment:
+      - MONGO_URL=mongodb://mongodb:27017/beyene_env
+    restart: always
+
+  frontend:
+    build: ./frontend
+    container_name: frontend
+    ports:
+      - "3000:3000"
+    volumes:
+      - ./frontend:/frontend
+    depends_on:
+      - api
+    restart: always

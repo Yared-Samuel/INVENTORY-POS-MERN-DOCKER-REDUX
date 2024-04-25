@@ -1,0 +1,95 @@
+.cards {
+    
+  border: 1px solid transparent;
+  border-radius: 5px;
+  box-shadow: var(--box-shadow);
+  overflow: hidden;
+  padding: 10px;
+
+}
+
+.add-purchase {
+padding: 4px;
+}
+
+
+.input-dynamic{
+display: flex;
+}
+
+.select {
+width: 25%;
+margin: 1rem;
+height: 4rem;
+color: black;
+border-radius: 0.5rem;
+font-size: 1.5rem;
+padding: 0.5rem;
+
+}
+.input-one {
+width: 25%;
+margin: 1rem;
+height: 4rem;
+color: black;
+border-radius: none;
+font-size: 1.5rem;
+padding: 0.5rem;
+}
+
+.remove-btn {
+height: 4rem;
+width: 8rem;
+background-color: orangered;
+border: none;
+border-radius: 1rem;
+margin: 1rem;
+cursor: pointer;
+font-size: 2rem;
+color: white;
+
+
+}
+
+.button-group {
+width: 50%;
+display: flex;
+justify-content: space-around;
+}
+.add-btn {
+height: 4rem;
+width: 10rem;
+background-color: teal;
+border: none;
+border-radius: 1rem;
+margin: 1rem;
+cursor: pointer;
+font-size: 2rem;
+color: white;
+}
+.save-btn {
+height: 4rem;
+width: 15rem;
+background-color: green;
+border: none;
+border-radius: 1rem;
+margin: 1rem;
+cursor: pointer;
+font-size: 2rem;
+color: white;
+}
+
+.title-one{
+color: teal;
+}
+
+.btn-back{
+  display: flex;
+  justify-content: flex-end;
+}
+
+
+input[type="date"]:not(.has-value):before{
+  color: lightgray;
+  content: attr(placeholder);
+}

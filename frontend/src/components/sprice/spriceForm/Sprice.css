@@ -1,0 +1,74 @@
+.select {
+  width: 25%;
+  margin: 1rem;
+  height: 4rem;
+  color: black;
+  border-radius: 0.5rem;
+  font-size: 1.5rem;
+  padding: 0.5rem;
+}
+
+.input-one {
+  width: 25%;
+  margin: 1rem;
+  height: 4rem;
+  color: black;
+  border-radius: none;
+  font-size: 1.5rem;
+  padding: 0.5rem;
+}
+.remove-btn {
+  height: 4rem;
+  width: 8rem;
+  background-color: orangered;
+  border: none;
+  border-radius: 1rem;
+  margin: 1rem;
+  cursor: pointer;
+  font-size: 2rem;
+  color: white;
+}
+.cards {
+    
+    border: 1px solid transparent;
+    border-radius: 5px;
+    box-shadow: var(--box-shadow);
+    overflow: hidden;
+    padding: 30px;
+
+  
+  }
+  .rows{
+    display: flex;
+    justify-content: space-between;
+    width: 70%;
+  }
+  .text-rows{
+    display: flex;
+    justify-content: space-between;
+    width: 35%;
+    margin-left: 6rem;
+  }
+
+  .add-btn {
+    height: 4rem;
+        width: 20rem;
+        background-color: green;
+        border: none;
+        border-radius: 1rem;
+        margin: 1rem;
+        cursor: pointer;
+        font-size: 2rem;
+        color: white;
+    }
+    .save-btn {
+        height: 4rem;
+        width: 20rem;
+        background-color: green;
+        border: none;
+        border-radius: 1rem;
+        margin: 1rem;
+        cursor: pointer;
+        font-size: 2rem;
+        color: white;
+        }

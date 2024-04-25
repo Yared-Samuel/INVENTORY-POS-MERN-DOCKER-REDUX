@@ -1,0 +1,71 @@
+.card{
+        border: 1px solid transparent;
+        border-radius: 5px;
+        box-shadow: var(--box-shadow);
+        width: 95%;
+        margin: auto;
+}
+
+.input-lable{
+
+  display: flex;
+  flex-direction: column;
+  
+}
+
+.form{
+  display: flex;
+  justify-content: space-around;
+}
+input {
+  height: 3rem;
+  outline: none;
+  /* border: 1px solid teal; */
+  border-radius: 3px;
+}
+
+.select {
+  width: 25%;
+  margin: 1rem;
+  height: 4rem;
+  color: black;
+  border-radius: 0.5rem;
+  font-size: 1.5rem;
+  padding: 0.5rem;
+
+}
+
+.title-button {
+  display: flex;
+  justify-content: space-between;
+  margin: 0;
+}
+
+.back-button{
+  margin-right: 2rem;
+
+  cursor: pointer;
+}
+.buttons:hover{
+  cursor: pointer;
+  size: 130%;
+  transform: 2sec;
+}
+
+.lable-one{
+  color: darkorange;
+  font-size: 1.3rem;
+  font-weight: bolder;
+}
+.lable-two{
+  color: darkcyan;
+  font-size: 1.3rem;
+  font-weight: bolder;
+}
+ .title-two{
+  color: darkorange;
+ }
+ .upper{
+  display: flex;
+  justify-content: space-between;
+ }

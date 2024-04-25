@@ -1,0 +1,39 @@
+.headerContainer {
+  /* Permalink - use to edit and share this gradient: https://colorzilla.com/gradient-editor/#e2e2e2+0,dbdbdb+50,d1d1d1+51,fefefe+100;Grey+Gloss+%231 */
+  background: linear-gradient(
+    to right,
+    #426d63 0%,
+    #378170 51%,
+    #3f9b85 100%
+  ); /* W3C, IE10+, FF16+, Chrome26+, Opera12+, Safari7+ */
+  position: sticky;
+  top: 0; /* Stick to the top of the viewport */
+  z-index: 100;
+}
+.headerInfoContainer {
+  display: flex;
+  justify-content: space-between;
+}
+
+.headerUserInfo {
+  display: flex;
+  margin-top: 1rem;
+}
+.headerName {
+  color: white;
+}
+.headerUserIcon {
+  margin-inline: 1rem;
+  color: white;
+}
+.headerButton {
+  margin: 1rem;
+}
+.headerUserInfo:hover{
+  color: gray;
+  cursor: pointer;
+}
+.headerUserIcon:hover {
+  margin-inline: 1rem;
+  color: gray;
+}
