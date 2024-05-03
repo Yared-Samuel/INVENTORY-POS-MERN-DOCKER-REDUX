@@ -5,18 +5,48 @@ import { selectIsLoggedIn } from '../../redux/features/auth/authSlice'
 import DataTable from 'react-data-table-component';
 import Search from '../../components/search/Search'
 import "./Reports.css"
-// import { compareAsc, format } from 'date-fns'
+import { useReactTable, getCoreRowModel, flexRender, getPaginationRowModel, getSortedRowModel, getFilteredRowModel } from '@tanstack/react-table';
 import moment from 'moment';
 import {MdOutlinePointOfSale} from 'react-icons/md'
 import { useNavigate } from 'react-router-dom';
+
+
+
+const dailySalesColumn = [
+  {
+    header: 'Date',
+    accessorKey: 'date',
+    cell: info => moment(info.getValue()).format('DD-MMM-YYYY'),
+  },
+  {
+    header: 'Sale/Cash',
+    accessorKey: 'totalSales',
+  },
+]
+
+const dailyStoreSalesColumn = [
+  {
+    header: 'Date',
+    accessorKey: 'date',
+    cell: info => moment(info.getValue()).format('DD-MMM-YYYY'),
+  },
+  {
+    header: 'Store',
+    accessorKey: 'storeName',
+  },
+  {
+    header: 'Quantity',
+    accessorKey: 'quantity',
+  },
+]
+
+
 
 const Reports = () => {
 
   const dispatch = useDispatch()
   const isLoggedIn =  useSelector(selectIsLoggedIn)
   const navigate = useNavigate()
-
-  const [filterSale, setFilterSale] = useState('');
 
 
   const goToSaleReports = () =>{
@@ -28,39 +58,6 @@ const Reports = () => {
     const goToGrandReports = () => {
       navigate("/grand-reports");
     };
-  const dailySalesCol = [
-    {
-      name: 'Date',
-      selector: row => moment(row.date).format('DD-MMM-YYYY'),
-      sortable: true,
-      type: 'date'
-      
-    },
-    {
-        name: 'Sale',
-        selector: row => row.totalSales,
-        sortable: true,
-    },    
-  ];
-
-  
-  const dailyStoreSalescol = [
-    {
-      name: 'Date',
-      selector: row => moment(row.date).format('DD-MMM-YYYY'),
-      sortable: true,
-    },
-    {
-      name: 'Store Name',
-      selector: row => row.storeName,
-      sortable: true,
-    },
-    {
-      name: 'Sale',
-      selector: row => row.quantity,
-      sortable: true,
-    },
-  ];
 
 
   
@@ -78,78 +75,37 @@ const Reports = () => {
   }, [isLoggedIn, isError, message, dispatch])
   console.log(dailyStoreSales)
 //  Filter
-const filterDailySales = dailySales.filter((row) => {
-  const totalSalesString = row.totalSales.toString(); // Convert the number to a string
-  return (
-    totalSalesString.toLowerCase().includes(filterSale.toLowerCase()) ||
-    row.date.toLowerCase().includes(filterSale.toLowerCase())
-  );
-});
+const [sorting, setSorting] = useState([])
+const [filtering, setFiltering] = useState('')
+  const table = useReactTable({
+    data: dailySales,
+    columns: dailySalesColumn,
+    getCoreRowModel: getCoreRowModel(),
+    getPaginationRowModel: getPaginationRowModel(),
+    getSortedRowModel: getSortedRowModel(),
+    getFilteredRowModel: getFilteredRowModel(),
+    state: {
+        sorting: sorting,
+        globalFilter: filtering,
+    },
+    onSortingChange: setSorting,
+    onGlobalFilterChange: setFiltering,
+})
 
-const filterStoreDailySale = dailyStoreSales.filter((row) => {
-  const totalSalesString = row.quantity.toString(); // Convert the number to a string
-  
-  return (
-    totalSalesString.toLowerCase().includes(filterSale.toLowerCase()) ||
-    row.date.toLowerCase().includes(filterSale.toLowerCase()) ||
-    row.storeName.toLowerCase().includes(filterSale.toLowerCase()) 
-
-  );
-});
-
-
- const customStyle = {
-  table: {
-		style: {
-			width: "100%",
-      margin: "0",
-      padding: "2px",
-		},
-	},
-  header: {
-		style: {
-			width: "100%",
-      margin: "0",
-      padding: "0",
-		},
-	},
-  pagination: {
-		style: {
-			width: "100%",
-      height: "5px",
-      margin: "0",
-      padding: "0",
-      color: "White",
-      backgroundColor: "#47A992"
-		},
-  },
-      rows: {
-        style: {
-          fontSize: "1.2rem",
-          padding: "0",
-          margin: "0", 
-        },
-      },
-  
-      headCells: {
-        style: {
-          fontSize: "1.6rem", 
-          backgroundColor: "#47A992",
-          color: "white",
-        }
-      },
-      cells: {
-        style: {
-          fontWeight: "bold",
-          borderStyle: "solid",
-          borderWidth: "0.02px",
-          borderColor: "#47A992",
-          color: "black",
-          backgroundColor: "white",
-          fontSize: "1.5rem",
-        }
-      },
- }
+  const tableStore = useReactTable({
+    data: dailyStoreSales,
+    columns: dailyStoreSalesColumn,
+    getCoreRowModel: getCoreRowModel(),
+    getPaginationRowModel: getPaginationRowModel(),
+    getSortedRowModel: getSortedRowModel(),
+    getFilteredRowModel: getFilteredRowModel(),
+    state: {
+        sorting: sorting,
+        globalFilter: filtering,
+    },
+    onSortingChange: setSorting,
+    onGlobalFilterChange: setFiltering,
+})
 
 
 
@@ -167,11 +123,8 @@ const filterStoreDailySale = dailyStoreSales.filter((row) => {
     
 
     <div className='search'>
-    <Search
-            type="text"
-            value={filterSale}
-            onChange={e => setFilterSale(e.target.value)}
-          />
+    <input type='text' value={filtering} onChange={(e)=> setFiltering(e.target.value)}/>
+
     </div>
     
     </div>
@@ -179,88 +132,93 @@ const filterStoreDailySale = dailyStoreSales.filter((row) => {
     
     <div className='containers'>
       <div className='boxs'>
-      <DataTable
+      <div className="w3-container w3-responsive">
+            <table className='w3-table-all w3-striped  w3-hoverable w3-card-4 w3-center'>
+                <thead>
+                {table.getHeaderGroups().map(headerGroup=> (
+                    <tr key={headerGroup.id} className="w3-light-grey">
+                        {headerGroup.headers.map(header=><th key={header.id} onClick={header.column.getToggleSortingHandler()}>
+                            {header.isPlaceholder ? null : flexRender(
+                                header.column.columnDef.header, 
+                                header.getContext()
+                            )}
+                            {
+                                {asc: ' 🔼', desc: ' 🔽'}[header.column.getIsSorted() ?? null]
+                            }
+                        </th>)}
+                    </tr>
+                ))}
+                </thead>
+                
+                <tbody>
+                    {table.getRowModel().rows.map(row =>(
+                        <tr key={row.id}>
+                            {row.getVisibleCells().map(cell=>(
+                                <td key={cell.id}>
+                                    {flexRender(cell.column.columnDef.cell, cell.getContext())}
+                                    </td>))}
+                        </tr>
+                    ))}
+                    
+                </tbody>
+            </table>
             
-            title="Daily Sales"
-              
-              columns={dailySalesCol}
-              data={filterDailySales}
-              selectableRows
-              persistTableHead
-              pagination
-              paginationPerPage={10} // Set the minimum pagination value to 5
-              paginationRowsPerPageOptions={[5, 10, 15, 20]} // Define available pagination options
-              fixedHeaderScrollHeight="300px"
-              // customStyles={customStyles}
-              highlightOnHover
-              pointerOnHover
-              dense
-              theme="solarized"
-              customStyles={customStyle}
-              fixedHeader='true'
-
-              
-            />
+        </div>
+        <div className='--flex-center'>
+            <a onClick={()=> table.setPageIndex(0)} className="w3-btn w3-text-white w3-teal">First</a>
+            <a disabled={!table.getCanPreviousPage()} onClick={()=> table.previousPage()} className="w3-btn w3-text-white w3-teal">Prev</a>
+            <a disabled={!table.getCanNextPage()} onClick={()=> table.nextPage()} className="w3-btn w3-text-white w3-teal">Next</a>
+            <a onClick={()=> table.setPageIndex(table.getPageCount() - 1)} className="w3-btn w3-text-white w3-teal">Last</a>
+        
+        </div>
       </div>
 
       <div className='boxs'>
 
-      <DataTable
+      <div className="w3-container w3-responsive">
+            <table className='w3-table-all w3-striped  w3-hoverable w3-card-4 w3-center'>
+                <thead>
+                {tableStore.getHeaderGroups().map(headerGroup=> (
+                    <tr key={headerGroup.id} className="w3-light-grey">
+                        {headerGroup.headers.map(header=><th key={header.id} onClick={header.column.getToggleSortingHandler()}>
+                            {header.isPlaceholder ? null : flexRender(
+                                header.column.columnDef.header, 
+                                header.getContext()
+                            )}
+                            {
+                                {asc: ' 🔼', desc: ' 🔽'}[header.column.getIsSorted() ?? null]
+                            }
+                        </th>)}
+                    </tr>
+                ))}
+                </thead>
+                
+                <tbody>
+                    {tableStore.getRowModel().rows.map(row =>(
+                        <tr key={row.id}>
+                            {row.getVisibleCells().map(cell=>(
+                                <td key={cell.id}>
+                                    {flexRender(cell.column.columnDef.cell, cell.getContext())}
+                                    </td>))}
+                        </tr>
+                    ))}
+                    
+                </tbody>
+            </table>
             
-            title="Daily Store Sales"
-              
-              columns={dailyStoreSalescol}
-              data={filterStoreDailySale}
-              selectableRows
-              selectableRowsHighlight
-              persistTableHead
-              pagination
-              paginationPerPage={10} // Set the minimum pagination value to 5
-              paginationRowsPerPageOptions={[5, 10, 15, 20]} // Define available pagination options
-              fixedHeaderScrollHeight="300px"
-              // customStyles={customStyles}
-              highlightOnHover
-              pointerOnHover
-              dense
-              theme="solarized"
-              customStyles={customStyle}
-              fixedHeader='true'
-              
-            />
+        </div>
+        <div className='--flex-center'>
+            <a onClick={()=> tableStore.setPageIndex(0)} className="w3-btn w3-text-white w3-teal">First</a>
+            <a disabled={!tableStore.getCanPreviousPage()} onClick={()=> tableStore.previousPage()} className="w3-btn w3-text-white w3-teal">Prev</a>
+            <a disabled={!tableStore.getCanNextPage()} onClick={()=> tableStore.nextPage()} className="w3-btn w3-text-white w3-teal">Next</a>
+            <a onClick={()=> tableStore.setPageIndex(tableStore.getPageCount() - 1)} className="w3-btn w3-text-white w3-teal">Last</a>
+        
+        </div>
       </div>
       
       
     </div>
-    {/* <div className='containers'>
-      
-      
-
-      <div className='boxs'>
-      <p>Purchase</p>
-
-      <DataTable
-            
-            // title="Daily Purchase"
-              
-              columns={dailyPurchaseCol}
-              data={filterDailyPurchases}
-              selectableRows
-              persistTableHead
-              pagination
-              paginationPerPage={5} // Set the minimum pagination value to 5
-              paginationRowsPerPageOptions={[5, 10, 15, 20]} // Define available pagination options
-              fixedHeaderScrollHeight="300px"
-              // customStyles={customStyles}
-              highlightOnHover
-              pointerOnHover
-              dense
-              theme="solarized"
-              customStyles={customStyle}
-              
-            />
-      </div>
-
-    </div> */}
+    
     </>
   )
 }

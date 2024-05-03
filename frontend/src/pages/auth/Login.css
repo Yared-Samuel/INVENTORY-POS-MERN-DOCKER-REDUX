@@ -344,3 +344,48 @@ button {
     }
   }
 
+/* For smaller screens */
+@media screen and (max-width: 768px) {
+  .formContainer {
+    width: 80%; /* Reduce width to fit smaller screens */
+  }
+
+  .inputLogin {
+    width: 100%; /* Make inputs full width */
+  }
+
+  /* Adjust font sizes for smaller screens */
+  .hotelAm {
+    font-size: 4rem;
+  }
+
+  .hotelEn {
+    font-size: 3rem;
+  }
+
+  .LoginBtn {
+    font-size: 24px;
+    width: 180px;
+  }
+
+  /* Adjust footer layout for smaller screens */
+  .footer {
+    padding: 20px;
+  }
+}
+
+/* For even smaller screens */
+@media screen and (max-width: 480px) {
+  .hotelAm {
+    font-size: 3rem;
+  }
+
+  .hotelEn {
+    font-size: 2rem;
+  }
+
+  .LoginBtn {
+    font-size: 20px;
+    width: 160px;
+  }
+}

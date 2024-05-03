@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react'
 import { useDispatch, useSelector } from "react-redux"
 import { selectIsLoggedIn } from "../../redux/features/auth/authSlice"
 import { getProdCat } from '../../redux/features/productCategory/categorySlice'
-import "./CategoryList.scss"
+import "./CategoryList.css"
 import { SpinnerImg } from '../../components/loader/Loader'
 import { useNavigate } from 'react-router-dom'
 import ReactPaginate from 'react-paginate'

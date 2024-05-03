@@ -4,12 +4,31 @@ import useRedirectLoggedOutUser from '../../customHook/useRedirectLoggedOutUser'
 import { useDispatch, useSelector } from 'react-redux';
 import { selectIsLoggedIn } from '../../redux/features/auth/authSlice';
 import { useNavigate } from 'react-router-dom'
-import DataTable from 'react-data-table-component'
+import { useReactTable, getCoreRowModel, flexRender, getPaginationRowModel, getSortedRowModel, getFilteredRowModel } from '@tanstack/react-table';
 import Search from '../../components/search/Search'
 import moment from 'moment';
 import { getUse } from '../../redux/features/use/useSlice';
 import ButtonPrimary from '../../components/button/ButtonPrimary';
 
+const columns = [
+  {
+    header: 'Date',
+    accessorKey: 'date',
+    cell: info => moment(info.getValue()).format('DD-MMM-YYYY'),
+  },
+  {
+    header: 'Store',
+    accessorKey: 'to_store.name',
+  },
+  {
+    header: 'Product',
+    accessorKey: 'product.name',
+  },
+  {
+    header: 'Quantity',
+    accessorKey: 'quatity',
+  },  
+];
 
 const UseList = () => {
 
@@ -22,31 +41,7 @@ const UseList = () => {
     navigate("/add-use")
   }
 
-   // Filtering
-
-   const [filterText, setFilterText] = useState('');
- 
-   const columnss = [
-  {
-    name: 'Date',
-    selector: row => row.date ? moment(row.date).format('DD-MMM-YYYY') : '',
-    sortactive: true,
-  },
-  {
-    name: 'Store',
-    selector: row => row.to_store && row.to_store.name ? row.to_store.name : '',
-    sortactive: true,
-  },
-  {
-    name: 'Product',
-    selector: row => row.product && row.product.name ? row.product.name : '',
-    sortactive: true,
-  },
-  {
-    name: 'Quantity',
-    selector: row => row.quatity,
-  },
-   ];
+  
 
    const {uses, isLoading, isError, message} = useSelector((state)=>state.use)
    useEffect(() => {
@@ -58,114 +53,79 @@ const UseList = () => {
       console.log(message)
     }
   }, [isLoggedIn, isError, message, dispatch])
-  console.log(uses)
-  const filteredUses = uses.filter(row =>{
-    const nameString = row.product && row.product.name ? row.product.name.toString() : '';
-    const date = moment(row.date).toString();
-    const store_name = row.to_store && row.to_store.name ? row.to_store.name.toString() : "";
-    return(
-      nameString.toLowerCase().includes(filterText.toLowerCase()) ||
-      date.includes(filterText.toLowerCase()) ||
-      store_name.toLowerCase().includes(filterText.toLowerCase())
-
-    )
-            
-    });
-    console.log(filteredUses)
-  const customStyle = {
-    table: {
-      style: {
-        width: "100%",
-        margin: "0",
-        padding: "2px",
+  
+  const [sorting, setSorting] = useState([])
+  const [filtering, setFiltering] = useState('')
+    const table = useReactTable({
+      data: uses,
+      columns: columns,
+      getCoreRowModel: getCoreRowModel(),
+      getPaginationRowModel: getPaginationRowModel(),
+      getSortedRowModel: getSortedRowModel(),
+      getFilteredRowModel: getFilteredRowModel(),
+      state: {
+          sorting: sorting,
+          globalFilter: filtering,
       },
-    },
-    header: {
-      style: {
-        width: "100%",
-        margin: "0",
-        padding: "0",
-      },
-    },
-    pagination: {
-      style: {
-        width: "100%",
-        height: "5px",
-        margin: "0",
-        padding: "0",
-        color: "White",
-        backgroundColor: "#47A992"
-      },
-    },
-        rows: {
-          style: {
-            fontSize: "1.2rem",
-            padding: "0",
-            margin: "0", 
-          },
-        },
-    
-        headCells: {
-          style: {
-            fontSize: "1.6rem", 
-            backgroundColor: "#47A992",
-            color: "white",
-          }
-        },
-        cells: {
-          style: {
-            fontWeight: "bold",
-            color: "black",
-            backgroundColor: "white",
-            fontSize: "1.2rem",
-            padding: "2px",
-            margin: "0"
-          }
-        },
-   }
+      onSortingChange: setSorting,
+      onGlobalFilterChange: setFiltering,
+  })
 
   return (
     <div className='product-list'>
-      <hr />
       <div className='table'>
         <div className='--flex-between --flex-dir-column'>
         <ButtonPrimary  onClick = {goCreateUse} names="Usage (ግብአት ተጠቀም)" className="--btn --btn-primary button-create"/>
+        <input type='text' value={filtering} onChange={(e)=> setFiltering(e.target.value)}/>
 
-          <span>
-            <Search 
-            type="text"
-            value={filterText}
-            onChange={e => setFilterText(e.target.value)}
-
-            />
-          </span>
         </div>
         
         {isLoading && <SpinnerImg />}
         <div className='table'>
           {!isLoading && uses.length === 0 ? (   <p>No Used Products Found!</p>
           ) : (
-            <DataTable
+            <div className="w3-container w3-responsive">
+            <table className='w3-table-all w3-striped  w3-hoverable w3-card-4 w3-center'>
+                <thead>
+                {table.getHeaderGroups().map(headerGroup=> (
+                    <tr key={headerGroup.id} className="w3-light-grey">
+                        {headerGroup.headers.map(header=><th key={header.id} onClick={header.column.getToggleSortingHandler()}>
+                            {header.isPlaceholder ? null : flexRender(
+                                header.column.columnDef.header, 
+                                header.getContext()
+                            )}
+                            {
+                                {asc: ' 🔼', desc: ' 🔽'}[header.column.getIsSorted() ?? null]
+                            }
+                        </th>)}
+                    </tr>
+                ))}
+                </thead>
+                
+                <tbody>
+                    {table.getRowModel().rows.map(row =>(
+                        <tr key={row.id}>
+                            {row.getVisibleCells().map(cell=>(
+                                <td key={cell.id}>
+                                    {flexRender(cell.column.columnDef.cell, cell.getContext())}
+                                    </td>))}
+                        </tr>
+                    ))}
+                    
+                </tbody>
+            </table>
             
-            title="Product Used In Process / ጥቅም ላይ የዋሉ ግብአቶች"
-              
-              columns={columnss}
-              data={filteredUses}
-              selectableRows
-              persistTableHead
-              pagination
-              paginationPerPage={7} // Set the minimum pagination value to 5
-              paginationRowsPerPageOptions={[7, 10, 15, 20]} // Define available pagination options
-              fixedHeaderScrollHeight="300px"
-              highlightOnHover
-              pointerOnHover
-              dense
-              // theme="solarized"
-              customStyles={customStyle}
-              
-            />
+        </div>
+           
            
           )}
+        </div>
+        <div className='--flex-center'>
+            <a onClick={()=> table.setPageIndex(0)} class="w3-btn w3-text-white w3-teal">First</a>
+            <a disabled={!table.getCanPreviousPage()} onClick={()=> table.previousPage()} class="w3-btn w3-text-white w3-teal">Prev</a>
+            <a disabled={!table.getCanNextPage()} onClick={()=> table.nextPage()} class="w3-btn w3-text-white w3-teal">Next</a>
+            <a onClick={()=> table.setPageIndex(table.getPageCount() - 1)} class="w3-btn w3-text-white w3-teal">Last</a>
+        
         </div>
       </div>
     </div>

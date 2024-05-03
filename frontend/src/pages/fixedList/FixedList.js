@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import "./FixedList.scss";
+import "./FixedList.css";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 

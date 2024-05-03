@@ -209,6 +209,27 @@ const getAllSales = asyncHandler(async (req, res) => {
     .sort("-createdAt");
   res.status(200).json(allSales);
 });
+const getServiceSale = asyncHandler(async (req, res) => {
+  const getServiceSales = await Store.find({ type: "pps" })
+    .populate("to_store", "name")
+    .populate("serve", "serveName")
+    .sort("-date");
+  res.status(201).json(getServiceSales);
+});
+
+const getAllTypesOfSale = asyncHandler(async (req, res) => {
+  const allTypesOfSale = await Store.find({
+    $or: [
+      { type: "ps" },
+      { 'type': "pps" },
+    ],
+  }).populate("to_store", "name")
+  .populate("product", "name")
+  .populate("serve", "serveName")
+  .sort("-createdAt");
+
+  res.status(201).json(allTypesOfSale);
+})
 
 const serviceSale = asyncHandler(async (req, res) => {
   const serveResult = [];
@@ -273,13 +294,6 @@ const serviceSale = asyncHandler(async (req, res) => {
 
 });
 
-const getServiceSale = asyncHandler(async (req, res) => {
-  const getServiceSales = await Store.find({ type: "pps" })
-    .populate("to_store", "name")
-    .populate("serve", "serveName")
-    .sort("-date");
-  res.status(201).json(getServiceSales);
-});
 
 // Use of products
 
@@ -425,4 +439,5 @@ module.exports = {
   getServiceSale,
   useProducts,
   getUseProducts,
+  getAllTypesOfSale,
 };

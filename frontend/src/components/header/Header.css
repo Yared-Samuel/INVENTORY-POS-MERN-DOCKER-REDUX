@@ -17,23 +17,38 @@
 
 .headerUserInfo {
   display: flex;
-  margin-top: 1rem;
+  margin-top: 0.5rem;
+  margin-bottom: 0;
 }
 .headerName {
   color: white;
 }
 .headerUserIcon {
-  margin-inline: 1rem;
+  margin-bottom: 0;
+  margin-inline: 0.5rem;
   color: white;
 }
-.headerButton {
-  margin: 1rem;
-}
+
 .headerUserInfo:hover{
   color: gray;
   cursor: pointer;
 }
 .headerUserIcon:hover {
-  margin-inline: 1rem;
   color: gray;
+}
+.headerRole{
+  color: white;
+}
+
+button {
+  margin-bottom: 0;
+}
+
+/* Responsive styles */
+@media screen and (max-width: 100px) {
+  .headerInfoContainer {
+    flex-direction: column;
+    align-items: center;
+  }
+
 }

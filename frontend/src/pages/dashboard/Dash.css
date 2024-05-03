@@ -1,4 +1,4 @@
-.back {
+/* .back {
   background-color: rgb(228, 228, 228);
   margin-left: 15px;
   margin-right: 15px;
@@ -11,18 +11,4 @@
   -moz-box-shadow: 10px 10px 5px 0px rgba(0, 0, 0, 0.75);
   box-shadow: 10px 10px 5px 0px rgba(0, 0, 0, 0.75);
 }
-.dash-title {
-  width: 100%;
-  color: #208681;
-  background-color: white;
-  display: flex;
-  justify-content: center;
-  margin: auto;
-  margin-bottom: 2rem;
-  -webkit-box-shadow: 10px 10px 5px -8px rgba(0, 0, 0, 0.75);
-  -moz-box-shadow: 10px 10px 5px -8px rgba(0, 0, 0, 0.75);
-  box-shadow: 10px 10px 5px -8px rgba(0, 0, 0, 0.75);
-}
-/* .boxs-rep{
-  width
-} */
+ */

@@ -228,7 +228,6 @@ const Dashboard = () => {
 
 return (
   <>
-  <h3 className='dash-title'>Dashboard</h3>
   <div className="top-title">
 
 

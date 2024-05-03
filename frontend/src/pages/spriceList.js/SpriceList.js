@@ -5,64 +5,13 @@ import { selectIsLoggedIn } from '../../redux/features/auth/authSlice'
 import useRedirectLoggedOutUser from '../../customHook/useRedirectLoggedOutUser'
 import { getSprices } from '../../redux/features/sprice/spriceSlice'
 import { SpinnerImg } from '../../components/loader/Loader'
-import DataTable from 'react-data-table-component';
-import Search from '../../components/search/Search'
 
+import { useReactTable, getCoreRowModel, flexRender, getPaginationRowModel, getSortedRowModel, getFilteredRowModel } from '@tanstack/react-table';
 import ButtonPrimary from '../../components/button/ButtonPrimary'
+import moment from 'moment'
 
 
-const customStyle = {
-  table: {
-    style: {
-      width: "100%",
-      margin: "0",
-      padding: "2px",
-    },
-  },
-  header: {
-    style: {
-      // width: "100%",
-      margin: "0",
-      padding: "0",
-    },
-  },
-  pagination: {
-    style: {
-      width: "100%",
-      height: "5px",
-      margin: "0",
-      padding: "0",
-      color: "White",
-      backgroundColor: "#47A992"
-    },
-  },
-      rows: {
-        style: {
-          fontSize: "1.2rem",
-          padding: "0",
-          margin: "0", 
-        },
-      },
-  
-      headCells: {
-        style: {
-          fontSize: "1.6rem", 
-          backgroundColor: "#47A992",
-          color: "white",
-        }
-      },
-      cells: {
-        style: {
-          fontWeight: "bold",
-          borderStyle: "solid",
-          borderWidth: "0.02px",
-          borderColor: "#47A992",
-          color: "black",
-          backgroundColor: "white",
-          fontSize: "1.5rem",
-        }
-      },
- }
+
 
 const SpriceList = () => {
 
@@ -78,36 +27,45 @@ const SpriceList = () => {
   }
 
 
-  const [filterText, setFilterText] = useState('');
 
 
   const columns = [
     {
-      name: 'Name',
-      selector: row => row.name || '',
-      sortable: true,
+      header: 'Name',
+      accessorKey: 'name',
     },
+    
     {
-      name: 'Products',
-      cell: (row) => (
-        <ul>
-          {row.products.map((product) => (
-            <li style={{ borderBottom: 'solid', borderWidth: "1px" }} key={product._id}>
-              {product.product && product.product.name}: {product.sellingPrice}
-            </li>
-          ))}
-        </ul>
-      ),
+      header: 'Quantity',
+      accessorKey: 'products',
+      cell: info => {
+        const row = info.row.original;
+        return (
+          <div>
+            {row.products.map((item, index) => (
+              <div key={index}>
+                <div style={{ fontWeight: "bold", fontSize: "14px" }}>{item.product.name} : {item.sellingPrice}</div>
+               
+              </div>
+            ))
+              }
+              </div>
+        )
+      }},
+    
+    {
+      header: 'Edit',
+      accessorKey: '_id',
+      cell: info => {
+        const row = info.row.original;
+        return (
+          <Link to={`/price-edit/${row._id}`} className='save-btn' onClick={()=>handelEdit(row._id)}>
+        Update
+      </Link>
+        )
+      }
     },
-    {
-      name: 'Edit',
-      cell: (row) => (<Link to={`/price-edit/${row._id}`} className='save-btn' onClick={()=>handelEdit(row._id)}>
-      Update
-    </Link>),
-      button: true
-      
-
-      },
+    
     
   ];
 
@@ -119,12 +77,6 @@ const SpriceList = () => {
   }
 
 
-  const conditionalRowStyles = editableRows.map((_id)=>({
-    when: (row)=>row._id === _id,
-    style: {
-      backgroundColor: 'rgba(255, 223, 186,0.7)'
-    }
-  }))
 
 
 
@@ -140,11 +92,28 @@ const SpriceList = () => {
                             
     }, [isLoggedIn, isError, message, dispatch])
     
-    const filteredPrice = sprices.filter(row=>{
-      const nameString =row.name && row.name.toString()
-      return(
-        nameString.toLowerCase().includes(filterText.toLowerCase())
-      )
+    // const filteredPrice = sprices.filter(row=>{
+    //   const nameString =row.name && row.name.toString()
+    //   return(
+    //     nameString.toLowerCase().includes(filterText.toLowerCase())
+    //   )
+    // })
+
+    const [sorting, setSorting] = useState([])
+    const [filtering, setFiltering] = useState('')
+      const table = useReactTable({
+        data: sprices,
+        columns: columns,
+        getCoreRowModel: getCoreRowModel(),
+        getPaginationRowModel: getPaginationRowModel(),
+        getSortedRowModel: getSortedRowModel(),
+        getFilteredRowModel: getFilteredRowModel(),
+        state: {
+            sorting: sorting,
+            globalFilter: filtering,
+        },
+        onSortingChange: setSorting,
+        onGlobalFilterChange: setFiltering,
     })
 
   return (
@@ -154,40 +123,47 @@ const SpriceList = () => {
       <div className='--flex-between --flex-dir-column'>
       <ButtonPrimary  onClick = {goCreateSprice} names="Set Price (ዋጋ አውጣ)" className="--btn --btn-primary button-create"/>
 
-        <span>
-        <Search 
-          type="text"
-          value={filterText}
-          onChange={e => setFilterText(e.target.value)}
+      <input type='text' value={filtering} onChange={(e)=> setFiltering(e.target.value)}/>
 
-          />
-        </span>
       </div>
       
       {isLoading && <SpinnerImg />}
       <div className='table'>
-        {!isLoading && filteredPrice.length === 0 ? (
+        {!isLoading && sprices.length === 0 ? (
           <p>No Price list found!</p>
         ) : (
-             <DataTable
-            
-            title="Selling Price List / የዋጋ ዝርዝር"
+          <div className="w3-container w3-responsive">
+          <table className='w3-table-all w3-striped  w3-hoverable w3-card-4 w3-center'>
+              <thead>
+              {table.getHeaderGroups().map(headerGroup=> (
+                  <tr key={headerGroup.id} className="w3-light-grey">
+                      {headerGroup.headers.map(header=><th key={header.id} onClick={header.column.getToggleSortingHandler()}>
+                          {header.isPlaceholder ? null : flexRender(
+                              header.column.columnDef.header, 
+                              header.getContext()
+                          )}
+                          {
+                              {asc: ' 🔼', desc: ' 🔽'}[header.column.getIsSorted() ?? null]
+                          }
+                      </th>)}
+                  </tr>
+              ))}
+              </thead>
               
-              columns={columns}
-              data={filteredPrice}
-              selectableRows
-              persistTableHead
-              pagination
-              fixedHeaderScrollHeight="300px"
-              // customStyles={customStyles}
-              highlightOnHover
-              pointerOnHover
-              dense
-              customStyles={customStyle}
-              
-              
-              
-            />
+              <tbody>
+                  {table.getRowModel().rows.map(row =>(
+                      <tr key={row.id}>
+                          {row.getVisibleCells().map(cell=>(
+                              <td key={cell.id}>
+                                  {flexRender(cell.column.columnDef.cell, cell.getContext())}
+                                  </td>))}
+                      </tr>
+                  ))}
+                  
+              </tbody>
+          </table>
+          
+      </div>
       )}
       </div>
         

@@ -1,7 +1,7 @@
 import React from 'react' 
 import {RiProductHuntLine} from "react-icons/ri"
 import {Link} from 'react-router-dom'
-import "./Home.scss"
+import "./Home.css"
 import heroImg from '../../assets/inv-img.png'
 import { ShowOnLogin, ShowOnLogout } from '../../components/protect/HiddenLink'
 

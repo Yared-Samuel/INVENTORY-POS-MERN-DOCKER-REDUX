@@ -50,8 +50,8 @@ const registerUser = asyncHandler(async (req, res) => {
     path: "/",
     httpOnly: true,
     expires: new Date(Date.now() + 1000 * 86400),  // one day
-    sameSite: "none",
-    secure: true
+    // sameSite: "none",
+    // secure: true
   });
 
   if (user) {
@@ -130,8 +130,8 @@ const registerUser = asyncHandler(async (req, res) => {
             path: "/",
             httpOnly: true,
             expires: new Date(0),  // expire now
-            sameSite: "none",
-            secure: true,
+            // sameSite: "none",
+            // secure: true,
             
         });
 

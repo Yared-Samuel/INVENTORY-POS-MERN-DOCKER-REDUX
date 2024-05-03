@@ -29,17 +29,17 @@ const Header = () => {
 
             <h3 className='headerUserInfo' onClick={goToRegister}>
                 <span className='headerUserIcon'><FaUserCircle /></span>
-                <span className='headerName'>{name} -</span>
-                <span className='headerRole'>-{role}</span>
+                <span className='headerName'>{name}</span>
                 
             </h3>
             
             
-            <button onClick={logout} className='--btn --btn-danger headerButton'>Logout</button>
+            <span className='headerRole'>{role}</span>
+            <button onClick={logout} className='--btn --btn-danger --btn-sm headerButton'>Logout</button>
+
             
             
         </div>
-        <hr />
     </div>
   )
 }

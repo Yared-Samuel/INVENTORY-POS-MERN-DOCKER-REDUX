@@ -1,14 +1,15 @@
-import React, {useEffect} from 'react'
-// import "./AddServe.scss"
+import React, {useEffect, useState} from 'react'
+import {useReactTable, getCoreRowModel, flexRender, getPaginationRowModel, getSortedRowModel, getFilteredRowModel} from '@tanstack/react-table'
 import { SpinnerImg } from '../../components/loader/Loader'
-import { FaEdit, FaTrashAlt } from 'react-icons/fa'
-import { AiOutlineEye } from "react-icons/ai"
 import useRedirectLoggedOutUser from '../../customHook/useRedirectLoggedOutUser'
 import { useDispatch, useSelector } from 'react-redux';
 import { selectIsLoggedIn } from '../../redux/features/auth/authSlice';
 import { useNavigate } from 'react-router-dom'
 import { getServes } from '../../redux/features/serve/serveSlice'
 import ButtonPrimary from '../../components/button/ButtonPrimary'
+import moment from "moment";
+
+
 
 const ServeList = () => {
 
@@ -23,6 +24,31 @@ const ServeList = () => {
     navigate("/add-serve")
   }
 
+  const columns = [
+        
+    {
+        header: 'Service Name',
+        accessorKey: 'serveName',
+        footer: 'Service Name',
+    },
+    {
+        header: 'Price',
+        accessorKey: 'servePrice',
+        footer: 'Price',
+    },
+    {
+        header: 'Measurment',
+        accessorKey: 'serveMeasure',
+        footer: 'Measurment',
+    },
+    {
+        header: 'Created At',
+        accessorKey: 'CreatedAt',
+        footer: 'Created At',
+        cell: info => moment(info.getValue()).format("DD-MMM-YYYY"),
+    },
+]
+
   const {serves, isLoading, isError, message} = useSelector((state)=>state.serve)
  
   useEffect(() => {
@@ -34,86 +60,91 @@ const ServeList = () => {
       console.log(message)
     }
   }, [isLoggedIn, isError, message, dispatch])
+ 
+
+  const [sorting, setSorting] = useState([])
+  const [filtering, setFiltering] = useState('')
+
+  const table = useReactTable({
+      data: serves,
+      columns,
+      getCoreRowModel: getCoreRowModel(),
+      getPaginationRowModel: getPaginationRowModel(),
+      getSortedRowModel: getSortedRowModel(),
+      getFilteredRowModel: getFilteredRowModel(),
+      state: {
+          sorting: sorting,
+          globalFilter: filtering,
+      },
+      onSortingChange: setSorting,
+      onGlobalFilterChange: setFiltering,
+  })
 
   return (
-    <div className='product-list'>
-      <hr />
-      <div className='table'>
+    <div className='w3-card-4'>     
+      
         <div className='--flex-between --flex-dir-column'>
           <span>
             <h3>Services</h3>
           </span>
-          {/* <span>
-            <Search value={search} onChange={(e)=> setSearch(e.target.value)}/>
-          </span> */}
-        </div>
+          
         <ButtonPrimary  onClick = {goCreateservice} names="New serve (አዲስ አገልግሎት)" className="--btn --btn-primary button-create"/>
+          </div>
+       
 
-        {isLoading && <SpinnerImg />}
-        <div className='table'>
-          {!isLoading && serves.length === 0 ? (
-            <p>No products found!</p>
-          ) : (
-            <table>
-              <thead>
-                <tr>
-                  <th>s/n</th>
-                  <th>Code</th>
-                  <th>Serveice Name</th>
-                  <th>Selling Price</th>
-                  <th>Measured By</th>
-                  
-                  <th>Action</th>
+        {isLoading && <SpinnerImg />}    
+   
+        <div className="w3-container w3-responsive">
+        <input type='text' value={filtering} onChange={(e)=> setFiltering(e.target.value)}/>
+        <table className='w3-table-all w3-striped  w3-hoverable w3-card-4'>
+            <thead>
+            {table.getHeaderGroups().map(headerGroup=> (
+                <tr key={headerGroup.id} className="w3-light-grey">
+                    {headerGroup.headers.map(header=><th key={header.id} onClick={header.column.getToggleSortingHandler()}>
+                        {flexRender(
+                            header.column.columnDef.header, 
+                            header.getContext()
+                        )}
+                        {
+                            {asc: ' 🔼', desc: ' 🔽'}[header.column.getIsSorted() ?? null]
+                        }
+                    </th>)}
                 </tr>
-              </thead>
-              <tbody>
-                {
-                    serves.map((serve, index)=>{
-                    const {_id, serveName, serveCode, servePrice, serveMeasure} = serve
-                    return (
-                      <tr key={_id}>
-                        <td>{index + 1}</td>
-                        <td>{serveCode}</td>
-                        <td>{serveName}</td>
-                        <td>{servePrice}</td>
-                        <td>{serveMeasure}</td>
-                        
-                        <td className='icons'>
-                          <span>
-                            <AiOutlineEye size={25} color='purple'/>
-                          </span>
-                          <span>
-                            <FaEdit size={20} color='green'/>
-                          </span>
-                          <span>
-                            <FaTrashAlt size={20} color='red'/>
-                          </span>
-                        </td>
-                      </tr>
-                    )
-                  })
-                }
-              </tbody>
-            </table>
-          )}
+            ))}
+            </thead>
+            
+            <tbody>
+                {table.getRowModel().rows.map(row =>(
+                    <tr key={row.id}>
+                        {row.getVisibleCells().map(cell=>(
+                            <td key={cell.id}>
+                                {flexRender(cell.column.columnDef.cell, cell.getContext())}
+                                </td>))}
+                    </tr>
+                ))}
+                
+            </tbody>
+        </table>
+        
+    </div>
+    <div className='--flex-center'>
+            <a onClick={()=> table.setPageIndex(0)} className="w3-btn w3-text-white w3-teal">First</a>
+            <a disabled={!table.getCanPreviousPage()} onClick={()=> table.previousPage()} className="w3-btn w3-text-white w3-teal">Prev</a>
+            <a disabled={!table.getCanNextPage()} onClick={()=> table.nextPage()} className="w3-btn w3-text-white w3-teal">Next</a>
+            <a onClick={()=> table.setPageIndex(table.getPageCount() - 1)} className="w3-btn w3-text-white w3-teal">Last</a>
+        
         </div>
-        {/* <ReactPaginate
-        breakLabel="..."
-        nextLabel="Next >"
-        onPageChange={handlePageClick}
-        pageRangeDisplayed={2}
-        pageCount={pageCount}
-        previousLabel="< Prev"
-        renderOnZeroPageCount={null}
-        containerClassName='pagination'
-        pageLinkClassName='page-num'
-        previousLinkClassName='page-num'
-        nextLinkClassName='page-num'
-        activeLinkClassName='activePage'
-      /> */}
-      </div>
+    
+
+
+        
+        
+      
     </div>
   )
 }
 
 export default ServeList
+
+
+

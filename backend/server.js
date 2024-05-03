@@ -18,11 +18,9 @@ const morgan = require("morgan");
 const { createProxyMiddleware } = require('http-proxy-middleware');
 const app = express();
 
-const HOST_IP = process.env.HOST_IP || "0.0.0.0";
-
-// app.use(cors())
+const HOST_IP = process.env.HOST_IP;
 app.use(cors({
-  origin: ["http://localhost:3000", `http://${HOST_IP}:3000`],
+  origin: [`http://${HOST_IP}:3000`,"http://192.168.1.19:3000","http://100.94.71.87:3000","http://localhost:3000"],
   methods: ["GET", "POST", "PUT", "DELETE", "UPDATE", "PATCH", "OPTIONS"],
   allowedHeaders: ["Content-Type", "Authorization"],
   credentials: true,

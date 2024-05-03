@@ -1,103 +1,101 @@
-.containers{
-    margin: 0.2rem;
-    padding: 0;
-    display: flex;
-    justify-content: space-around;
-    /* column-gap: 1; */
-    min-height: 80vh;
-    /* background-color: white; */
-    border-radius: 1rem;
- 
-    
+.containers {
+  margin: 0.2rem;
+  padding: 0;
+  display: flex;
+  /* flex-wrap: wrap; */
+  justify-content: space-around;
+  min-height: 80vh;
+  border-radius: 1rem;
 }
 
-.boxs{
-    width: 55%;
-    height: 120px;
-    margin: 2rem;
-    padding: 0;
-    display: inline-block;
-}
-.top-title{
-    margin: 0;
-    padding: 0;
-    display: flex;
-    justify-content: space-between;
-    padding-left: 2rem;
-    padding-right: 2rem;
-    
+.boxs {
+  width: calc(50% - 4rem); /* Adjust the width to take 50% of the container minus margins */
+  max-width: 600px; /* Limit maximum width to ensure it doesn't become too wide */
+  height: auto; /* Let the height adjust based on content */
+  margin: 2rem;
+  padding: 0;
 }
 
-.search{
-    margin: 0;
-    padding: 0;
-    width: 20%;
-}
-h4{
-    padding: 0;
-    margin: 0;
-    color: #47A992,
-    
+/* .top-title {
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-wrap: wrap; 
+  justify-content: space-between;
+  padding-left: 2rem;
+  padding-right: 2rem;
+} */
 
-}
-p{
-    color: teal;
-    font-weight: bolder;
-
+.search {
+  margin: 0;
+  padding: 0;
+  width: 100%; /* Take full width */
+  max-width: 300px; /* Limit maximum width */
 }
 
 /* Upper button style */
+.report-btn {
+  font-size: 1rem; /* Adjust font size for smaller screens */
+  padding: 0.25em 0.5em; /* Adjust padding for smaller buttons */
+  background: #fff;
+  color: #4a5568;
+  border: 0px solid #a0aec0;
+  margin: 0.1em;
+  transition: background 0.2s ease, color 0.2s ease, box-shadow 0.2s ease, transform 0.2s ease;
+  box-shadow: 0 0 0 #bee3f8;
+  transform: translateY(0);
+}
 
-.report-btn{
-    font-size: 2vmin;
-    font-weight: bold;
-    padding: .5em 1em;
-    background: #fff;
-    color: #4A5568;
-    border: 0px solid #A0AEC0;
-    margin: .1em;
-    transition: background .2s ease, color .2s ease, box-shadow .2s ease, transform .2s ease;
-    box-shadow: 0 0 0 #BEE3F8;
-    transform: translateY(0);
-  }
-  .report-btn-active {
-    /* font-size: 2vmin; */
-    font-size: 1.5rem;
-    font-weight: bolder;
-    padding: .5em 1em;
-    background: #47A992;
-    color: #fff;
-    border: 0px solid #A0AEC0;
-    margin: .1em;
-    transition: background .2s ease, color .2s ease, box-shadow .2s ease, transform .2s ease;
-    box-shadow: 0 0 0.8em 0 rgba(213, 63, 140, .8);
-    transform: translateY(0);
-  }
-  .report-btn:first-of-type{
-    border-radius: .5em 0 0 .5em;
-  }
-  .report-btn:last-of-type{
-    border-radius: 0 .5em .5em 0;
-  }
-  .report-btn i{
-    color: #A0AEC0;
-    margin-right: .3em;
-    transition: all .2s ease-out;
-  }
-  .multi-button:hover button{
-    color: #A0AEC0;
-  }
-  
-  .multi-button:hover button:hover{
-    background: #D53F8C;
-    color: #fff;
-    box-shadow: 0 0 0.8em 0 rgba(213, 63, 140, .8);
-    transform: translateY(-.2em);
-  }
-  .multi-button:hover button i{
-    color: #CBD5E0;
-  }
-  .multi-button:hover button:hover i{
-    color: #FED7E2;
-    transform: rotate(-10deg);
-  }
+.report-btn-active {
+  font-size: 1rem; /* Adjust font size for smaller screens */
+  padding: 0.25em 0.5em; /* Adjust padding for smaller buttons */
+  background: #47a992;
+  color: #fff;
+  border: 0px solid #a0aec0;
+  margin: 0.1em;
+  transition: background 0.2s ease, color 0.2s ease, box-shadow 0.2s ease, transform 0.2s ease;
+  box-shadow: 0 0 0.8em 0 rgba(213, 63, 140, 0.8);
+  transform: translateY(0);
+}
+
+.report-btn i {
+
+  transition: all 0.2s ease-out;
+}
+
+.report-btn:first-of-type {
+  border-radius: 0.5em 0 0 0.5em;
+}
+
+.report-btn:last-of-type {
+  border-radius: 0 0.5em 0.5em 0;
+}
+
+.report-btn i {
+  color: #a0aec0;
+
+  transition: all 0.2s ease-out;
+}
+
+.multi-button:hover button {
+  color: #a0aec0;
+}
+
+.multi-button:hover button:hover {
+  background: #d53f8c;
+  color: #fff;
+  box-shadow: 0 0 0.8em 0 rgba(213, 63, 140, 0.8);
+  transform: translateY(-0.2em);
+}
+
+.multi-button:hover button i {
+  color: #cbd5e0;
+}
+
+.multi-button:hover button:hover i {
+  color: #fed7e2;
+  transform: rotate(-10deg);
+}
+
+
+/* Define styles for mobile devices */

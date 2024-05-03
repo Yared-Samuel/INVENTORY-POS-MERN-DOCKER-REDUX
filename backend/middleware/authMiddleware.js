@@ -7,6 +7,8 @@ const protect = asyncHandler(async (req, res, next) => {
         let token
         const token_app = req.headers['authorization'];
         const token_web = req.cookies.token
+
+        console.log({token_app, token_web})
     
         if(!token_app && !token_web){
             res.status(401)

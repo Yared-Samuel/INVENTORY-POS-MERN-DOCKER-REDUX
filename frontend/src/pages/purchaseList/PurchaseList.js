@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import "./PurchaseList.scss";
+import "./PurchaseList.css";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { getPurchases } from "../../redux/features/purchase/purchaseSlice";
@@ -174,7 +174,6 @@ const PurchaseList = () => {
   return (
     <Card>
       <div className="product-list">
-        <hr />
         <div className="table">
           <div className="--flex-between --flex-dir-column">
             <span>

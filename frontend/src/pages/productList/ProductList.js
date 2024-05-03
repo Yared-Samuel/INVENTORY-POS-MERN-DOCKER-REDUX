@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from 'react'
-import "./productList.scss"
+import "./productList.css"
 import { SpinnerImg } from '../../components/loader/Loader'
 import { FaEdit, FaTrashAlt } from 'react-icons/fa'
 import { AiOutlineEye } from "react-icons/ai"
@@ -9,63 +9,44 @@ import { selectIsLoggedIn } from '../../redux/features/auth/authSlice';
 import { getProducts } from "../../redux/features/product/productSlice"
 import { useNavigate } from 'react-router-dom'
 import Search from '../../components/search/Search'
-import { FILTER_PRODUCTS, selectFilteredProducts } from '../../redux/features/product/filterSlice'
-import ReactPaginate from 'react-paginate';
-import DataTable from 'react-data-table-component'
+import {useReactTable, getCoreRowModel, flexRender, getPaginationRowModel, getSortedRowModel, getFilteredRowModel} from '@tanstack/react-table'
 import ButtonPrimary from '../../components/button/ButtonPrimary'
 
-const customStyle = {
-  table: {
-    style: {
-      width: "100%",
-      margin: "0",
-      padding: "2px",
-    },
+const columns = [
+
+  {
+    header: 'Product Name',
+    accessorKey: 'name',
   },
-  header: {
-    style: {
-      width: "100%",
-      margin: "0",
-      padding: "0",
-    },
+  {
+    header: 'Category',
+    accessorKey: 'category.name',
   },
-  pagination: {
-    style: {
-      width: "100%",
-      height: "5px",
-      margin: "0",
-      padding: "0",
-      color: "White",
-      backgroundColor: "#47A992"
+  {
+    header: 'Quantity',
+    accessorKey: 'quatity',
+    cell: info => {
+      const row = info.row.original;
+      const measurment = row.measurment
+      const sub_measurment = row.sub_measurment || null;
+      const sub_measurment_value = row.sub_measurment_value || null;
+      if (sub_measurment && sub_measurment_value) {
+            
+      
+                return  "1 " + measurment + "  =  " + sub_measurment_value + " " + sub_measurment
+                  
+                
+               
+              } else {
+                return  measurment
+              }
+            },
     },
-  },
-      rows: {
-        style: {
-          fontSize: "1.2rem",
-          padding: "0",
-          margin: "0", 
-        },
-      },
-  
-      headCells: {
-        style: {
-          fontSize: "1.6rem", 
-          backgroundColor: "#47A992",
-          color: "white",
-        }
-      },
-      cells: {
-        style: {
-          fontWeight: "bold",
-          borderStyle: "solid",
-          borderWidth: "0.02px",
-          borderColor: "#47A992",
-          color: "black",
-          backgroundColor: "white",
-          fontSize: "1.5rem",
-        }
-      },
- }
+  {
+    header: 'Description',
+    accessorKey: 'description',
+  },  
+];
 
 const ProductList = () => {
 
@@ -92,36 +73,6 @@ const ProductList = () => {
     navigate("/prodCat")
   }
 
-  const columns = [
-    {
-      name: "Product",
-      selector: (row) => row.name,
-      sortable: true,
-    },
-    {
-      name: "Category",
-      selector: (row) => row.category.name,
-      sortable: true,
-    },
-    {
-      name: "Measurment",
-      selector: (row) => row.measurment,
-      sortable: true,
-    },
-    {
-      name: "Sub Measurment",
-      selector: (row) => row.sub_measurment,
-    },
-    {
-      name: "Measurment Value",
-      selector: (row) => row.sub_measurment_value,
-    },
-    {
-      name: "Description",
-      selector: (row) => row.description,
-    },
-    
-  ];
 
   const {products, isLoading, isError, message} = useSelector((state)=>state.product)
   useEffect(() => {
@@ -134,63 +85,91 @@ const ProductList = () => {
     }
   }, [isLoggedIn, isError, message, dispatch])
 
-const filteredProduct = products.filter((row)=>{
-  const nameString = row.name.toString()
-  return(
-    nameString.toLowerCase().includes(filterText.toLowerCase())
-  )
-})
 
 
+const [sorting, setSorting] = useState([])
+  const [filtering, setFiltering] = useState('')
+
+    const table = useReactTable({
+      data: products,
+      columns,
+      getCoreRowModel: getCoreRowModel(),
+      getPaginationRowModel: getPaginationRowModel(),
+      getSortedRowModel: getSortedRowModel(),
+      getFilteredRowModel: getFilteredRowModel(),
+      state: {
+          sorting: sorting,
+          globalFilter: filtering,
+      },
+      onSortingChange: setSorting,
+      onGlobalFilterChange: setFiltering,
+  })
 
   
 
   return (
     <div className='product-list'>
-      <hr />
       <div className='table'>
-        <div className='--flex-between --flex-dir-column'>
         
-        <span>
-            <h3>Products</h3>
-          </span>
-          
-          
-          <span>
-            <Search value={filterText} onChange={(e) => setFilterText(e.target.value)}/>
-          </span>
-        </div>
         <div className='--flex-between'>
         <ButtonPrimary  onClick = {goCreateProduct} names="Product (ምርት መዝግብ)" className="--btn --btn-primary button-create"/>
 
         <ButtonPrimary  onClick = {goCreateProductCategory} names="Create Category (ምርት አይነት)" className="--btn --btn-primary button-create"/>
 
         <ButtonPrimary  onClick = {goToCategory} names="Cat List (ምርት አይነት ዝርዝር)" className="--btn --btn-primary button-create"/>
+        <input type='text' value={filtering} onChange={(e)=> setFiltering(e.target.value)}/>
+
 
         </div>
         
         {isLoading && <SpinnerImg />}
         <div className='table'>
-          {!isLoading && filteredProduct.length === 0 ? (
+          {!isLoading && products.length === 0 ? (
             <p>No products found!</p>
           ) : (
-            <DataTable
-                title="Product List / የምርት ዝርዝር"
-                columns={columns}
-                data={filteredProduct}
-                selectableRows
-                persistTableHead
-                pagination
-                fixedHeaderScrollHeight="300px"
-                highlightOnHover
-                pointerOnHover
-                dense
-                customStyles={customStyle}
+            
+            <div className="w3-container w3-responsive">
+       
+        <table className='w3-table-all w3-striped  w3-hoverable w3-card-4'>
+            <thead>
+            {table.getHeaderGroups().map(headerGroup=> (
+                <tr key={headerGroup.id} className="w3-light-grey">
+                    {headerGroup.headers.map(header=><th key={header.id} onClick={header.column.getToggleSortingHandler()}>
+                        {flexRender(
+                            header.column.columnDef.header, 
+                            header.getContext()
+                        )}
+                        {
+                            {asc: ' 🔼', desc: ' 🔽'}[header.column.getIsSorted() ?? null]
+                        }
+                    </th>)}
+                </tr>
+            ))}
+            </thead>
+            
+            <tbody>
+                {table.getRowModel().rows.map(row =>(
+                    <tr key={row.id}>
+                        {row.getVisibleCells().map(cell=>(
+                            <td key={cell.id}>
+                                {flexRender(cell.column.columnDef.cell, cell.getContext())}
+                                </td>))}
+                    </tr>
+                ))}
                 
-              />
+            </tbody>
+        </table>
+        
+    </div>
           )}
         </div>
+        <div className='--flex-center'>
+            <a onClick={()=> table.setPageIndex(0)} className="w3-btn w3-text-white w3-teal">First</a>
+            <a disabled={!table.getCanPreviousPage()} onClick={()=> table.previousPage()} className="w3-btn w3-text-white w3-teal">Prev</a>
+            <a disabled={!table.getCanNextPage()} onClick={()=> table.nextPage()} className="w3-btn w3-text-white w3-teal">Next</a>
+            <a onClick={()=> table.setPageIndex(table.getPageCount() - 1)} className="w3-btn w3-text-white w3-teal">Last</a>
         
+        </div>
       </div>
     </div>
   )

@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { MdKeyboardArrowRight } from "react-icons/md";
 import { NavLink } from "react-router-dom";
-import "./Sidebar.css"
+import "./Sidebars.css"
 
 const activeLink = ({ isActive }) => (isActive ? "active" : "link");
 const activeSublink = ({ isActive }) => (isActive ? "active" : "link");
@@ -34,10 +34,10 @@ const SidebarItem = ({ item, isOpen }) => {
                 <NavLink to={child.path} className={activeSublink}>
                   <div className="sidebar-item">
                     <div className="sidebar-title">
-                      <span>
+                      <div>
                         {child.icon && <div className="icon">{child.icon}</div>}
                         {isOpen && <div>{child.title}</div>}
-                      </span>
+                      </div>
                     </div>
                   </div>
                 </NavLink>

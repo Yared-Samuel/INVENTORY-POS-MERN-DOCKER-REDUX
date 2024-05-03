@@ -1,6 +1,6 @@
 import React from 'react'
 import Card from '../../card/Card'
-import "./ProdCatForm.scss"
+import "./ProdCatForm.css"
 
 const ProdCatForm = ({prodCat, handleInputChange, saveProductcategory}) => {
   return (

@@ -44,7 +44,7 @@
   padding: 1rem;
   border-radius: 3px;
   overflow: hidden;
-  // display: none;
+  display: none;
   transition: all 0.3s;
 }
 

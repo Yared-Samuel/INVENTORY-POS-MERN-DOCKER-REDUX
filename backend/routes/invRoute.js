@@ -1,7 +1,7 @@
 const express = require("express");
 const protect = require("../middleware/authMiddleware");
 const { purchase, delivery,  getAllPurchase,  getStoreDelivery} = require("../controllers/invController");
-const { sale, getAllSales, serviceSale, getServiceSale, useProducts, getUseProducts } = require("../controllers/saleController.js");
+const { sale, getAllSales, serviceSale, getServiceSale, useProducts, getUseProducts, getAllTypesOfSale } = require("../controllers/saleController.js");
 const find_price = require("../middleware/priceMiddleware");
 const adjust_measurment = require("../middleware/measurmentMiddleware");
 const { createDelivery, getAllDelivery} = require("../controllers/deliverControl.js");
@@ -15,7 +15,8 @@ router.get("/delivery",  protect,getAllDelivery)
 router.get("/delivery/:id", protect, getStoreDelivery)
 //Sale //
 router.post("/sale", protect,sale)
-router.get("/sale", protect, getAllSales)
+// router.get("/sale", protect, getAllSales)
+router.get("/sale", protect, getAllTypesOfSale)
 // router.get("/sale/balance", protect, getProductBalance)
 
 // Service sale

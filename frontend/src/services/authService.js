@@ -1,10 +1,16 @@
 import axios from "axios";
 import {toast} from "react-toastify"
-const BACKEND_URL = process.env.REACT_APP_BACKEND_URL || process.env.TAILSCALE_BACKEND_URL
+const BACKEND_URL = process.env.REACT_APP_BACKEND_URL
+// const TAILSCALE_BACKEND_URL = process.env.TAILSCALE_BACKEND_URL
 const cookie =  document.cookie
 // console.log("first")
 // console.log(cookie)
 const token = localStorage.getItem('token');
+// const URL_options = [
+//     BACKEND_URL,
+//     TAILSCALE_BACKEND_URL
+
+// ]
 
 export const validateEmail = (email) => {
     return email.match(
@@ -74,3 +80,21 @@ export const getLoginStatus = async () => {
         toast.error(message);
     }
 };
+// export const getLoginStatus = async () => {
+//     try {
+//         for (const url of URL_options) {
+//                 if (!url) continue; 
+//                 console.log(`Trying URL: ${url}`);
+//                 const response = await axios.get(`${url}/api/users/loggedin`);
+//                 if(response.data) {
+//                     return response.data;
+//                 }
+                
+//             }
+        
+//     } catch (error) {
+//         // Handle the error
+//         const message = error.message || 'An error occurred while retrieving login status';
+//         toast.error(message);
+//     }
+// };
